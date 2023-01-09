@@ -8,8 +8,12 @@ import { ArticlesListPage } from './pages/ArticlesListPage';
 import { ArticlePage } from './pages/ArticlePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import Navbar from './pages/Navbar';
+import LoginPage from './pages/LoginPage';
+import CreateAccountPage from './pages/CreateAccountPage';
+import useUser from './hooks/useUser';
 
 function App() {
+  const {user, isLoading} = useUser();
   return (
     <BrowserRouter>
      <div className="App">
@@ -17,9 +21,11 @@ function App() {
       <div id="page-body">
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="about" element={<AboutPage />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/articles" element={<ArticlesListPage />} />
         <Route path="/articles/:articleId" element={<ArticlePage />} />
+        <Route path="/login" element={!user ? <LoginPage /> : <HomePage />} />
+        <Route path="/signup" element={<CreateAccountPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       </div>
