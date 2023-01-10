@@ -2,10 +2,15 @@ import express from 'express';
 import { db, connectToDb } from './db.js';
 import admin from 'firebase-admin';
 import fs from 'fs';
+import path from 'path';
+import url from 'url';
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const credentials = JSON.parse(
-    fs.readFileSync('credentials.json')
-);
+    fs.readFileSync(`${__dirname}/credentials.json`)
+)
 admin.initializeApp({
     credential: admin.credential.cert(credentials)
 })
@@ -15,21 +20,22 @@ app.use(express.json());
 
 app.use(async (req, res, next) => {
     const { authToken } = req.headers;
-    if (authToken) {
+    if (!!authToken) {
         try {
             req.user = await admin.auth().verifyIdToken(authToken);
         }
         catch (ex) {
-            res.sendStatus(400);
+            return res.sendStatus(400);
         }
     }
+    req.user = req.user || {}
     next();
 })
 
 app.get('/api/articles/:name', async (req, res) => {
     const { name } = req.params;
     const article = await db.collection('articles').findOne({ name })
-    const { uid } = req.user || {}
+    const { uid } = req.user
 
     if (article) {
         const upvoteIds = article.upvoteIds || [];
@@ -61,11 +67,11 @@ app.put('/api/articles/:name/upvote', async (req, res) => {
         if (canUpvote) {
             await db.collection('articles').updateOne({ name }, {
                 $inc: { upvotes: 1 },
-                $push: {upvoteIds: {uid}}
+                $push: { upvoteIds: { uid } }
             });
         }
 
-        const updatedArticle = await db.collection('articles').findOne({name});
+        const updatedArticle = await db.collection('articles').findOne({ name });
         res.json(updatedArticle)
     }
     else {
@@ -75,10 +81,14 @@ app.put('/api/articles/:name/upvote', async (req, res) => {
 
 app.post('/api/articles/:name/comment', async (req, res) => {
     const { name } = req.params;
-    const { text, postedBy } = req.body;
-    await db.collection('articles').updateOne({ name }, {
-        $push: { comments: { text, postedBy } }
-    });
+    const { text } = req.body;
+    const { email } = req.user;
+
+    if (email) {
+        await db.collection('articles').updateOne({ name }, {
+            $push: { comments: { text, postedBy: email } }
+        });
+    }
 
     const article = await db.collection('articles').findOne({ name });
     if (article) {
