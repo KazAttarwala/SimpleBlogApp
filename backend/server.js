@@ -19,10 +19,10 @@ const app = express();
 app.use(express.json());
 
 app.use(async (req, res, next) => {
-    const { authToken } = req.headers;
-    if (!!authToken) {
+    const { authtoken } = req.headers;
+    if (!!authtoken) {
         try {
-            req.user = await admin.auth().verifyIdToken(authToken);
+            req.user = await admin.auth().verifyIdToken(authtoken);
         }
         catch (ex) {
             return res.sendStatus(400);
@@ -63,7 +63,9 @@ app.put('/api/articles/:name/upvote', async (req, res) => {
     const article = await db.collection('articles').findOne({ name });
     if (article) {
         const upvoteIds = article.upvoteIds || [];
-        const canUpvote = uid && !upvoteIds.includes(uid);
+        console.log(upvoteIds)
+        console.log(uid)
+        const canUpvote = uid && !upvoteIds.some(i => i.uid === uid);
         if (canUpvote) {
             await db.collection('articles').updateOne({ name }, {
                 $inc: { upvotes: 1 },
