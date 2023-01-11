@@ -3,6 +3,7 @@ import useUser from '../hooks/useUser';
 import { getAuth, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { FaRegUser } from 'react-icons/fa';
 
 const Navbar = () => {
     const { user, isLoading } = useUser();
@@ -21,9 +22,11 @@ const Navbar = () => {
                 </li>
                 <div className="nav-right">
                     {user
-                        ? <Button variant="link" className='login-btn' onClick={() => {
+                        ? <><span><FaRegUser /> {user['email']}</span>
+                            <Button variant="link" className='login-btn' onClick={() => {
                             signOut(getAuth())
                         }}>Log Out</Button>
+                        </>
                         : <Button variant='link' className='login-btn' onClick={() => {
                             navigate('/login')
                         }}>Log In</Button>
