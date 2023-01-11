@@ -39,7 +39,7 @@ app.get('/api/articles/:name', async (req, res) => {
 
     if (article) {
         const upvoteIds = article.upvoteIds || [];
-        article.canUpvote = uid && !upvoteIds.includes(uid);
+        article.canUpvote = uid && !upvoteIds.some(i => i.uid === uid);
         res.json(article)
     }
     else {
@@ -63,8 +63,6 @@ app.put('/api/articles/:name/upvote', async (req, res) => {
     const article = await db.collection('articles').findOne({ name });
     if (article) {
         const upvoteIds = article.upvoteIds || [];
-        console.log(upvoteIds)
-        console.log(uid)
         const canUpvote = uid && !upvoteIds.some(i => i.uid === uid);
         if (canUpvote) {
             await db.collection('articles').updateOne({ name }, {
