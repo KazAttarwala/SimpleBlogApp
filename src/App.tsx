@@ -1,5 +1,3 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
@@ -11,6 +9,7 @@ import Navbar from './pages/Navbar';
 import LoginPage from './pages/LoginPage';
 import CreateAccountPage from './pages/CreateAccountPage';
 import useUser from './hooks/useUser';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const {user, isLoading} = useUser();

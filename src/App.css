@@ -4,13 +4,7 @@ body {
 }
 
 button {
-  padding: 16px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 16px;
-  background-color: black;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
+  margin-right: 10px;
 }
 
 h3, h4 {
@@ -53,7 +47,7 @@ nav a:hover {
 #page-body {
   max-width: 700px;
   margin: auto;
-  padding-top: 72px;
+  padding-top: 120px;
 }
 
 .article-list-item {
@@ -112,4 +106,9 @@ input, textarea {
   position: absolute;
   top: 8px;
   right: 8px;
+}
+
+.login-btn {
+  text-decoration: none !important;
+  color: #212529 !important;
 }

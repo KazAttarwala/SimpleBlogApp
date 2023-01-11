@@ -7,6 +7,7 @@ import CommentsList from "../components/CommentsList";
 import { ArticleInfo } from '../interfaces';
 import AddCommentForm from "../components/AddCommentForm";
 import useUser from "../hooks/useUser";
+import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 export const ArticlePage = () => {
     const params = useParams();
@@ -20,11 +21,11 @@ export const ArticlePage = () => {
         const getInfo = async () => {
             const token = user && await user.getIdToken();
             const res = await axios.get(`/api/articles/${articleId}`, {
-                headers: {authToken: token}
+                headers: { authToken: token }
             });
             setArticleInfo(res.data);
         }
-        
+
         if (isLoading) {
             getInfo();
         }
@@ -49,8 +50,8 @@ export const ArticlePage = () => {
             <h1>{article?.title}</h1>
             <div id="upvotes-section">
                 {user
-                    ? <button hidden={!canUpvote} onClick={upvote}>Upvote</button>
-                    : <button onClick={() => navigate('/login')}>Log in to upvote</button>
+                    ? (canUpvote ? <Button variant="success" onClick={upvote}>Upvote</Button> : <DisabledButtonWithTooltip />)
+                    : <Button onClick={() => navigate('/login')}>Log in to upvote</Button>
                 }
                 <p>{articleInfo ? articleInfo.upvotes : 0} upvote(s)</p>
             </div>
@@ -62,5 +63,17 @@ export const ArticlePage = () => {
                 <CommentsList comments={articleInfo.comments} />
             }
         </div>
+    )
+}
+
+const DisabledButtonWithTooltip = () => {
+    return (
+        <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip-disabled">Already upvoted</Tooltip>}>
+            <span className="d-inline-block">
+                <Button variant="success" disabled style={{ pointerEvents: 'none' }}>
+                    Upvote
+                </Button>
+            </span>
+        </OverlayTrigger>
     )
 }

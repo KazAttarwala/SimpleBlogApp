@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { Button } from "react-bootstrap";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
@@ -51,7 +52,7 @@ const LoginPage = () => {
                 />
             </div>
             <div>
-                <button onClick={logIn}>Log In</button>
+                <Button className="mt-3" onClick={logIn}>Log In</Button>
                 <Link style={{paddingLeft: '10px'}} to={"/signup"}>Don't have an account? Create one here.</Link>
             </div>
         </>

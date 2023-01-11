@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { Button } from "react-bootstrap";
 
 const CreateAccountPage = () => {
     const [username, setUsername] = useState("");
@@ -70,7 +71,7 @@ const CreateAccountPage = () => {
                 />
             </div>
             <div>
-                <button onClick={createAccount}>Create</button>
+                <Button className="mt-3" variant="success" onClick={createAccount}>Create</Button>
                 <Link style={{paddingLeft: '10px'}} to={"/login"}>Already have an account? Log in here.</Link>
             </div>
         </>
