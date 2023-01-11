@@ -17,6 +17,11 @@ admin.initializeApp({
 
 const app = express();
 app.use(express.json());
+app.use(express.static(path.join(__dirname, './build')));
+
+app.get(/^(?!\/api).+/, (req, res) => {
+    res.sendFile(path.join(__dirname, './build/index.html'));
+})
 
 app.use(async (req, res, next) => {
     const { authtoken } = req.headers;
@@ -40,6 +45,7 @@ app.get('/api/articles/:name', async (req, res) => {
     if (article) {
         const upvoteIds = article.upvoteIds || [];
         article.canUpvote = uid && !upvoteIds.some(i => i.uid === uid);
+        console.log(article)
         res.json(article)
     }
     else {
@@ -99,9 +105,11 @@ app.post('/api/articles/:name/comment', async (req, res) => {
     }
 })
 
+const PORT = process.env.PORT || 8000
+
 connectToDb('mongodb://127.0.0.1:27017', 'blog-db', () => {
     console.log("connected to blog-db");
-    app.listen('8000', () => {
-        console.log("blog-app backend running on port 8000.")
+    app.listen(PORT, () => {
+        console.log("blog-app backend running on port" + PORT)
     });
 })
