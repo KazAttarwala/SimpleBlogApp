@@ -5,16 +5,19 @@ import useUser from "../hooks/useUser";
 
 const AddCommentForm = (props: any) => {
     const [commentText, setCommentText] = useState("");
-    const {user, isLoading} = useUser();
+    const {user, isLoading} : any = useUser();
     const navigate = useNavigate();
 
     const addComment = async (e: any) => {
         e.preventDefault();
+        const token = user && await user.getIdToken();
         const res = await axios.post(`/api/articles/${props.articleId}/comment`, {
             text: commentText,
             postedBy: 'Qais'
+        }, 
+        {
+            headers: {authToken: token}
         });
-        //navigate(`/articles/${props.articleId}`);
         setCommentText("");
         props.onArticleUpdated(res.data);
     }

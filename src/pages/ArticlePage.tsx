@@ -12,6 +12,7 @@ export const ArticlePage = () => {
     const params = useParams();
     const { articleId } = params;
     const [articleInfo, setArticleInfo] = useState<ArticleInfo | null>(null);
+    const canUpvote = articleInfo ? articleInfo.canUpvote : false;
     const { user, isLoading }: any = useUser();
     const navigate = useNavigate();
 
@@ -23,9 +24,11 @@ export const ArticlePage = () => {
             });
             setArticleInfo(res.data);
         }
-
-        getInfo();
-    }, [articleId])
+        
+        if (isLoading) {
+            getInfo();
+        }
+    }, [isLoading, user])
 
     const article = articles.find(i => i.name === articleId);
     if (!article) {
@@ -46,7 +49,7 @@ export const ArticlePage = () => {
             <h1>{article?.title}</h1>
             <div id="upvotes-section">
                 {user
-                    ? <button hidden={!articleInfo || (articleInfo && !articleInfo.canUpvote)} onClick={upvote}>Upvote</button>
+                    ? <button hidden={!canUpvote} onClick={upvote}>Upvote</button>
                     : <button onClick={() => navigate('/login')}>Log in to upvote</button>
                 }
                 <p>{articleInfo ? articleInfo.upvotes : 0} upvote(s)</p>
