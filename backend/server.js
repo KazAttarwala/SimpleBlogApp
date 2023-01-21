@@ -4,6 +4,7 @@ import admin from 'firebase-admin';
 import fs from 'fs';
 import path from 'path';
 import url from 'url';
+import 'dotenv/config'
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -107,7 +108,7 @@ app.post('/api/articles/:name/comment', async (req, res) => {
 
 const PORT = process.env.PORT || 8000
 
-connectToDb('mongodb://127.0.0.1:27017', 'blog-db', () => {
+connectToDb(`mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@cluster0.hepaui9.mongodb.net/?retryWrites=true&w=majority`, 'blog-db', () => {
     console.log("connected to blog-db");
     app.listen(PORT, () => {
         console.log("blog-app backend running on port" + PORT)
