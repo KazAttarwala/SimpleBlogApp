@@ -3,3 +3,5 @@ database
 credentials.json
 build
 .env
+prod-env.yaml
+app.yaml
