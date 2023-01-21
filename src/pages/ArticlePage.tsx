@@ -59,7 +59,7 @@ export const ArticlePage = () => {
                 <p key={idx}>{paragraph}</p>
             ))}
             <AddCommentForm onArticleUpdated={(articleInfo: ArticleInfo) => setArticleInfo(articleInfo)} articleId={articleId} />
-            {articleInfo && articleInfo.comments &&
+            {articleInfo && articleInfo.comments.length > 0 &&
                 <CommentsList comments={articleInfo.comments} />
             }
         </div>
